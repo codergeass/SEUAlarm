@@ -19,6 +19,10 @@ public class WeatherInfoClient {
         client.post(getAbsoluteUrl(url), params, responseHandler);
     }
 
+    public static boolean isRain() {
+        return true;
+    }
+
     private static String getAbsoluteUrl(String relativeUrl) {
         return BASE_URL + relativeUrl;
     }

@@ -2,19 +2,90 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="cn.edu.seu.cse.seualarm">
 
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.CAPTURE_AUDIO_OUTPUT" />
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".controler.HomeActivity">
+
+        <activity android:name=".controler.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity android:name=".controler.alarm.AlarmAddActivity"
+            android:label="添加闹钟"
+            android:parentActivityName=".controler.MainActivity">
+        </activity>
+        <activity android:name=".controler.alarm.RingSetActivity"
+            android:label="设置铃声"
+            android:parentActivityName=".controler.MainActivity">
+        </activity>
+        <activity android:name=".controler.alarm.CustomRingSetActivity"
+            android:label="自定义铃声设置"
+            android:parentActivityName=".controler.MainActivity">
+        </activity>
+
+        <activity android:name=".controler.alarm.AlarmRingActivity">
+        </activity>
+
+        <receiver
+            android:name=".controler.alarm.AlarmReceiver"
+            android:process=":daemon">
+            <!--广播定义单独进程，在6.0上接受不到，不定义进程退到后台也接受不到。-->
+            <!--广播和后台运行的服务保持在一个线程，只要服务不死，这样就都可以接受到广播了-->
+            <!--<intent-filter>
+                <action android:name="cn.edu.seu.cse.seualarm.RING_ALARM" />
+            </intent-filter>-->
+        </receiver>
+        <receiver android:name=".controler.alarm.BootReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+        <receiver android:name=".controler.alarm.WakeReceiver">
+            <intent-filter>
+                <action android:name="cn.edu.seu.cse.seualarm.wake.gray" />
+            </intent-filter>
+        </receiver>
+
+        <service
+            android:name=".controler.alarm.AlarmRingService"
+            android:enabled="true"
+            android:exported="true" />
+        <service
+            android:name=".controler.alarm.DaemonService$DaemonInnerService"
+            android:enabled="true"
+            android:exported="false"
+            android:process=":daemon"/>
+        <service
+            android:name=".controler.alarm.WakeReceiver$WakeNotifyService"
+            android:enabled="true"
+            android:exported="false"/>
+        <service
+            android:name=".controler.alarm.WakeReceiver$WakeGrayInnerService"
+            android:enabled="true"
+            android:exported="false"/>
+        <service
+            android:name=".controler.alarm.DaemonService"
+            android:exported="true"
+            android:process=":daemon">
+        </service>
+
     </application>
 
 </manifest>

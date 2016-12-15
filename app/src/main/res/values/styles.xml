@@ -1,11 +1,118 @@
 <resources>
 
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar"/>
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="AppTheme.Base" parent="Theme.AppCompat.NoActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimary</item>
         <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <style name="SelectableButton">
+        <item name="android:background">?selectableItemBackground</item>
+    </style>
+
+    <style name="AlarmDayToggle" parent="SelectableButton">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:textAllCaps">true</item>
+    </style>
+
+    <style name="Widget.MaterialSheetFab.Fab" parent="">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">bottom|end</item>
+        <item name="android:layout_marginBottom">@dimen/fab_bottom</item>
+        <item name="android:layout_marginRight">@dimen/fab_spacing</item>
+        <item name="android:src">@drawable/ic_add_grey_100_36dp</item>
+        <item name="fabSize">normal</item>
+        <item name="borderWidth">0dp</item>
+    </style>
+
+    <style name="Widget.MaterialSheetFab.Sheet" parent="">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">@dimen/sheet_spacing</item>
+        <item name="android:layout_marginBottom">@dimen/sheet_spacing</item>
+        <item name="android:layout_marginLeft">@dimen/sheet_spacing</item>
+        <item name="android:layout_marginRight">@dimen/sheet_spacing</item>
+        <item name="cardBackgroundColor">@color/background_card</item>
+        <item name="cardElevation">@dimen/fab_sheet_elevation</item>
+        <item name="cardMaxElevation">@dimen/fab_sheet_elevation</item>
+        <item name="contentPadding">-3dp</item>
+    </style>
+
+    <style name="TextAppearance.MaterialSheetFab.Sheet.Item" parent="">
+        <item name="android:layout_width">@dimen/sheet_width</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:padding">@dimen/sheet_item_spacing</item>
+        <item name="android:background">?attr/selectableItemBackground</item>
+        <item name="android:clickable">true</item>
+        <item name="android:textSize">@dimen/sheet_item_textsize</item>
+        <item name="android:textColor">@color/text_black_87</item>
+        <item name="android:drawablePadding">@dimen/sheet_item_image_spacing</item>
+    </style>
+
+    <style name="horizontal_line_style">
+        <item name="android:background">@color/line_and_outline_grey</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">0.4dp</item>
+    </style>
+
+    <style name="AnimBottom" parent="@android:style/Animation">
+        <item name="android:windowEnterAnimation">@anim/popup_alpha_out</item>
+        <item name="android:windowExitAnimation">@anim/popup_alpha_in</item>
+    </style>
+
+    <style name="item_style">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingBottom">12dp</item>
+        <item name="android:paddingTop">12dp</item>
+    </style>
+
+    <style name="item_text_style">
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:layout_marginLeft">10dp</item>
+        <item name="android:layout_marginRight">10dp</item>
+        <item name="android:drawablePadding">10dp</item>
+        <item name="android:textColor">@color/light_black</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="Divider">
+        <!-- This is robust against dark/light theme changes. -->
+        <!-- Normally not visible in bottom sheets; workaround is to manually change the background color of the divider-->
+        <item name="android:background">?android:attr/listDivider</item>
+    </style>
+
+    <style name="Divider.Horizontal">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">1dp</item>
+    </style>
+
+    <style name="Divider.Vertical">
+        <item name="android:layout_width">1dp</item>
+        <item name="android:layout_height">match_parent</item>
+    </style>
+
+    <!--Style for a button that opens an AddLabelDialog-->
+    <style name="BaseLabel" parent="TextAppearance.AppCompat">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:hint">@string/label</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:textSize">@dimen/text_size_subhead</item>
+    </style>
+
+    <style name="divider_line_blank">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">5dp</item>
     </style>
 
 </resources>
