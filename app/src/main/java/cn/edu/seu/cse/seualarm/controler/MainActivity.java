@@ -4,29 +4,36 @@ import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 
 import android.support.v7.app.AppCompatActivity;
+import android.text.InputType;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.gordonwong.materialsheetfab.MaterialSheetFab;
 import com.gordonwong.materialsheetfab.MaterialSheetFabEventListener;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 import cn.edu.seu.cse.seualarm.R;
 import cn.edu.seu.cse.seualarm.controler.alarm.AlarmAddActivity;
 import cn.edu.seu.cse.seualarm.controler.alarm.AlarmListFragment;
 import cn.edu.seu.cse.seualarm.module.AlarmInfo;
+import cn.edu.seu.cse.seualarm.module.RunInfo;
+import cn.edu.seu.cse.seualarm.module.WeatherInfo;
 import cn.edu.seu.cse.seualarm.util.Constants;
+import cn.edu.seu.cse.seualarm.util.PrefUtil;
 import devlight.io.library.ntb.NavigationTabBar;
 
 /**
@@ -44,14 +51,27 @@ public class MainActivity extends AppCompatActivity {
     private WeatherViewFragment weatherViewFragment;
     private AlarmListFragment alarmListFragment;
     private RunInfoFragment runInfoFragment;
-    private AboutFragment aboutFragment;
+    private SettingFragment settingFragment;
     private boolean mIsChanged;
+    private boolean loadOk;
+    private WeatherInfo weatherInfo;
+    private RunInfo runInfo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        lastSelected = 1;
+        Bundle bundle = getIntent().getExtras();
+        loadOk = bundle.getBoolean(Constants.LOAD_OK, false);
+        Log.d("alarm", "main activity loadok:" + loadOk);
+        if (loadOk)
+            weatherInfo = (WeatherInfo) bundle.getSerializable(Constants.WEATHER_INFO);
+        else
+            weatherInfo = new WeatherInfo();
+
+        Log.d("alarm", "main activity oncreate:" + weatherInfo.getmTemp());
+
+        lastSelected = 0;
         initUI();
     }
 
@@ -86,11 +106,23 @@ public class MainActivity extends AppCompatActivity {
 
         initNtb();
         initFtb();
+
+        weatherViewFragment = new WeatherViewFragment();
+        weatherViewFragment.setLoadOk(loadOk);
+        weatherViewFragment.setmWeatherInfo(weatherInfo);
+        Log.d("alarm", "main activity set weatherinfo:" + weatherInfo.getmTemp());
+        alarmListFragment = new AlarmListFragment();
+        runInfoFragment = new RunInfoFragment();
+        settingFragment = new SettingFragment();
+
+        // 滑动取消fab显示
+//        alarmListFragment.alarmListView.addOnScrollListener(new TopTrackListener(mFab));
     }
 
     // 初始化FAB
     private void initFtb() {
         mFab = (Fab) findViewById(R.id.fab);
+        mFab.hide();
 
         View sheetView = findViewById(R.id.fab_sheet);
         View overlay = findViewById(R.id.overlay);
@@ -118,9 +150,50 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View view) {
                         materialSheetFab.hideSheet();
-//                        startActivity(
-//                                new Intent(MainActivity.this, AlarmAddActivity.class)
-//                        );
+                        mNtb.setModelIndex(2);
+                        boolean run = PrefUtil.getBoolean(MainActivity.this, Constants.RUN_TODAY, false);
+                        if (!run) {
+                            new MaterialDialog.Builder(MainActivity.this)
+                                    .title("跑操签到")
+                                    .negativeText("取消")
+                                    .positiveText("确定")
+                                    .inputType(InputType.TYPE_CLASS_TEXT)
+                                    .inputRange(0, 100)
+                                    .input("记录一下心情吧", null, new MaterialDialog.InputCallback() {
+                                        @Override
+                                        public void onInput(@NonNull MaterialDialog dialog, CharSequence input) {
+                                        }
+                                    })
+                                    .onPositive(new MaterialDialog.SingleButtonCallback() {
+                                        @Override
+                                        public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                            int runtimes = PrefUtil.getInt(MainActivity.this, Constants.RUN_TIMES, 0);
+                                            runInfo = new RunInfo();
+                                            runInfo.setIsRun(1);
+                                            runInfo.setRunMem(dialog.getInputEditText().getText().toString());
+                                            runInfo.setRunDate(new Date());
+                                            runInfo.setRunWeather(weatherViewFragment.getmWeatherInfo());
+                                            runInfo.setRunTimes(runtimes + 1);
+                                            runInfoFragment.addRunInfo(runInfo);
+                                            runInfoFragment.updateView();
+                                            PrefUtil.putBoolean(MainActivity.this, Constants.RUN_TODAY, true);
+                                            PrefUtil.putInt(MainActivity.this, Constants.RUN_TIMES, runtimes+1);
+                                            new Handler().postDelayed(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    Toast.makeText(MainActivity.this,
+                                                            "跑操信息已记录", Toast.LENGTH_SHORT).show();
+                                                }
+                                            }, 500);
+                                        }
+                                    })
+                                    .show();
+                        } else {
+                            final RunAlreadyPopWindow runAlreadyPopWindow;
+                            runAlreadyPopWindow = new RunAlreadyPopWindow(MainActivity.this);
+                            runAlreadyPopWindow.showPopup(runInfoFragment.getView());
+                        }
+                        mFab.show();
                     }
                 }
         );
@@ -150,28 +223,28 @@ public class MainActivity extends AppCompatActivity {
                 new NavigationTabBar.Model.Builder(
                         getResources().getDrawable(R.drawable.ic_weather_white_24dp),
                         Color.parseColor(colors[0]))
-                        .title("Weather")
+                        .title("天气")
                         .build()
         );
         models.add(
                 new NavigationTabBar.Model.Builder(
                         getResources().getDrawable(R.drawable.ic_alarm_white_24dp),
                         Color.parseColor(colors[1]))
-                        .title("Alarm")
+                        .title("闹钟")
                         .build()
         );
         models.add(
                 new NavigationTabBar.Model.Builder(
                         getResources().getDrawable(R.drawable.ic_run_white_24dp),
                         Color.parseColor(colors[2]))
-                        .title("Run")
+                        .title("跑操")
                         .build()
         );
         models.add(
                 new NavigationTabBar.Model.Builder(
-                        getResources().getDrawable(R.drawable.ic_about_white_24dp),
+                        getResources().getDrawable(R.drawable.ic_settings_white_24dp),
                         Color.parseColor(colors[3]))
-                        .title("About")
+                        .title("设置")
                         .build()
         );
 
@@ -180,7 +253,16 @@ public class MainActivity extends AppCompatActivity {
 
         mNtb.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
-            public void onPageScrolled(final int position, final float positionOffset, final int positionOffsetPixels) {
+            public void onPageScrolled(final int position, final float positionOffset,
+                                       final int positionOffsetPixels) {
+//                if (position == 0) {
+//                    if (positionOffset >= 0.7)
+//                        weatherViewFragment.mWeatherView.cancelAnimation();
+//                    if (position >= 0.8) {
+//                        mFab.setVisibility(View.VISIBLE);
+//                        mFab.show();
+//                    }
+//                }
             }
 
             @Override
@@ -194,36 +276,45 @@ public class MainActivity extends AppCompatActivity {
             private void updatePage(int position) {
                 switch (position) {
                     case 0:
-                        materialSheetFab.hideSheetThenFab();
-                        if (weatherViewFragment != null)
-                            weatherViewFragment.mWeatherView.startAnimation();
+                        mFab.hide();
+                        if (weatherViewFragment != null) {
+                            weatherViewFragment.updateView();
+//                            if (weatherViewFragment.mWeatherView.getCurrentWeather()
+//                                    == xyz.matteobattilana.library.Common.Constants.weatherStatus.RAIN)
+//                            weatherViewFragment.mWeatherView.startAnimation();
+                        }
                         break;
                     case 1:
-                        materialSheetFab.showFab();
-                        if (weatherViewFragment != null)
-                            weatherViewFragment.mWeatherView.cancelAnimation();
+                        mFab.show();
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (weatherViewFragment != null)
+                                    if (weatherViewFragment.mWeatherView.getCurrentWeather()
+                                    == xyz.matteobattilana.library.Common.Constants.weatherStatus.RAIN)
+                                    weatherViewFragment.mWeatherView.cancelAnimation();
+                            }
+                        }, 500);
+
                         break;
                     case 2:
-                        materialSheetFab.showFab();
-                        if (weatherViewFragment != null)
-                            weatherViewFragment.mWeatherView.cancelAnimation();
+                        mFab.show();
+//                        if (weatherViewFragment != null)
+//                            weatherViewFragment.mWeatherView.cancelAnimation();
                         break;
                     case 3:
-                        materialSheetFab.hideSheetThenFab();
-                        if (weatherViewFragment != null)
-                            weatherViewFragment.mWeatherView.cancelAnimation();
+                        mFab.hide();
+//                        if (weatherViewFragment != null)
+//                            weatherViewFragment.mWeatherView.cancelAnimation();
                         break;
                     default:
-                        materialSheetFab.hideSheetThenFab();
-                        if (weatherViewFragment != null)
-                            weatherViewFragment.mWeatherView.cancelAnimation();
                         break;
                 }
             }
 
             @Override
             public void onPageScrollStateChanged(final int state) {
-//                if(state==ViewPager.SCROLL_STATE_IDLE){
+//                if(state == ViewPager.SCROLL_STATE_IDLE){
 //                    if(mIsChanged){
 //                        mIsChanged = false;
 //                        updatePage(lastSelected);
@@ -283,10 +374,10 @@ public class MainActivity extends AppCompatActivity {
                     lastSelected = 2;
                     return runInfoFragment;
                 case 3:
-                    if (aboutFragment == null)
-                        aboutFragment = new AboutFragment();
+                    if (settingFragment == null)
+                        settingFragment = new SettingFragment();
                     lastSelected = 3;
-                    return aboutFragment;
+                    return settingFragment;
                 default:
                     if (weatherViewFragment == null)
                         weatherViewFragment = new WeatherViewFragment();
@@ -365,7 +456,7 @@ public class MainActivity extends AppCompatActivity {
 //    public class JustPagerAdapter extends PagerAdapter {
 //
 //        @Override
-//        public int getCount() {
+//        public int getMemo() {
 //            return 4;
 //        }
 //
@@ -397,10 +488,10 @@ public class MainActivity extends AppCompatActivity {
 //                    view = runInfoFragment.mView;
 //                    break;
 //                case 3:
-//                    if (aboutFragment == null)
-//                        aboutFragment = new AboutFragment();
+//                    if (settingFragment == null)
+//                        settingFragment = new AboutFragment();
 //                    lastSelected = 3;
-//                    view = aboutFragment.mView;
+//                    view = settingFragment.mView;
 //                    break;
 //                default:
 //                    if (weatherViewFragment == null)

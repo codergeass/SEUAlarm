@@ -92,12 +92,16 @@
     <color name="blue_ice">#72abf8</color>
     <!-- 冷蓝色:夜间气温 -->
 
+    <color name="title_transparent_black">#22000000</color>
+
     <color name="background_card">#fff</color>
     <color name="text_black_87">#de000000</color>
     <color name="text_white_87">#deFFFFFF</color>
 
+    <color name="color_setting">#F4B63E</color>
+
     <string-array name="my_navigation_bar_colors">
-        <item>#df5a55</item>
+        <item>#F06493</item>
         <item>#F4B63E</item>
         <item>#76afcf</item>
         <item>#397cbf</item>

@@ -35,7 +35,9 @@
         style="@style/Widget.MaterialSheetFab.Fab"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true" />
+        android:layout_alignParentRight="true"
+        android:visibility="invisible"
+        app:layout_behavior="cn.edu.seu.cse.seualarm.controler.ScrollAwareFABBehavior"/>
 
     <com.gordonwong.materialsheetfab.DimOverlayFrameLayout
         android:id="@+id/overlay"

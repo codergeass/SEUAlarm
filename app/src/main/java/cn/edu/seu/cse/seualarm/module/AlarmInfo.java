@@ -11,7 +11,7 @@ import cn.edu.seu.cse.seualarm.util.Constants;
 /**
  * Created by Coder Geass on 2016/12/9.
  */
-public class AlarmInfo implements Serializable {
+public class AlarmInfo implements Serializable, Comparable {
     private int hour;
     private int minute;
     private int enable;
@@ -59,6 +59,22 @@ public class AlarmInfo implements Serializable {
                 ", enable=" + enable +
                 ", vibrate=" + vibrate +
                 " }";
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        if (o instanceof AlarmInfo) {
+            AlarmInfo alarmInfo = (AlarmInfo) o;
+            if (hour > alarmInfo.getHour())
+                return 1;
+            else if (hour == alarmInfo.getHour()) {
+                int compare = minute - alarmInfo.getMinute();
+                return compare == 0 ? 0 : compare > 0 ? 1 : -1;
+            }
+            else
+                return -1;
+        }
+        return -1;
     }
 
     public String getRingResId() {

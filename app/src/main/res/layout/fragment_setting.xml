@@ -1,0 +1,196 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:background="@color/bg_color"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="25dp"
+            android:background="@color/bg_color"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/color_setting"
+            android:orientation="vertical">
+            
+            <LinearLayout
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/item_text_style"
+                    android:text="气象数据源"/>
+
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"/>
+
+                <TextView
+                    android:id="@+id/tv_weather_src_value"
+                    style="@style/item_text_style"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="公共网络"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="10dp"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/rb_common_net"
+                    android:layout_marginLeft="10dp"
+                    android:text="公共网络" />
+
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"/>
+
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/rb_local_net"
+                    android:layout_marginRight="10dp"
+                    android:text="局域网络" />
+
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"/>
+
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/rb_other_net"
+                    android:layout_marginRight="10dp"
+                    android:text="公共气象源" />
+
+            </LinearLayout>
+            
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:background="@color/bg_color"/>
+
+        <RelativeLayout
+            style="@style/item_style"
+            android:background="@color/color_setting">
+
+            <TextView
+                style="@style/item_text_style"
+                android:layout_centerVertical="true"
+                android:layout_alignParentLeft="true"
+                android:text="闹钟天气提醒" />
+
+            <android.support.v7.widget.SwitchCompat
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:layout_centerVertical="true"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:id="@+id/alarm_weather_if" />
+
+        </RelativeLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:background="@color/bg_color"/>
+
+        <RelativeLayout
+            android:id="@+id/run_rl"
+            style="@style/item_style"
+            android:background="@color/color_setting">
+
+            <TextView
+                style="@style/item_text_style"
+                android:layout_centerVertical="true"
+                android:layout_alignParentLeft="true"
+                android:text="跑操目标设置"/>
+
+            <TextView
+                android:id="@+id/arrow_two"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/ic_keyboard_arrow_right_black_24dp"/>
+
+            <TextView
+                android:id="@+id/tv_run_value"
+                style="@style/item_text_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="5dp"
+                android:layout_toLeftOf="@id/arrow_two" />
+        </RelativeLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:background="@color/bg_color"/>
+
+        <RelativeLayout
+            android:id="@+id/run_reset_rl"
+            style="@style/item_style"
+            android:background="@color/color_setting">
+
+            <TextView
+                style="@style/item_text_style"
+                android:layout_centerVertical="true"
+                android:layout_alignParentLeft="true"
+                android:text="重置跑操记录"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/ic_keyboard_arrow_right_black_24dp"/>
+
+        </RelativeLayout>
+
+        <!--<ImageView-->
+            <!--android:layout_width="100dp"-->
+            <!--android:layout_height="100dp"-->
+            <!--android:layout_marginTop="50dp"-->
+            <!--android:layout_gravity="center_horizontal"-->
+            <!--android:src="@drawable/clock_515px"/>-->
+    </LinearLayout>
+
+    <!--<TextView-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignParentBottom="true"-->
+        <!--android:layout_marginBottom="80dp"-->
+        <!--android:text="CopyRight M3A-507"-->
+        <!--android:textColor="@color/white_trans30"-->
+        <!--android:layout_centerHorizontal="true"-->
+        <!--android:id="@+id/tv_copyright"/>-->
+
+</RelativeLayout>

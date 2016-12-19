@@ -1,6 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/bg_color"
+    tools:context="cn.edu.seu.cse.seualarm.controler.SplashActivity">
+
+    <!--<ImageView
+        android:id="@+id/splash_iv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="fitXY"
+        android:src="@drawable/bg_welcome_sunny"/>-->
+
+    <ImageView
+        android:layout_width="128dp"
+        android:layout_height="128dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="70dp"
+        android:id="@+id/seualarm_logo"
+        android:src="@drawable/clock_515px">
+    </ImageView>
+
+    <Space
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/seualarm_name"
+        android:layout_marginBottom="10dp"
+        android:layout_gravity="center_horizontal"
+        android:text="SEUERALARM"
+        android:textColor="@color/sienna"
+        android:typeface="serif"
+        android:textSize="30sp"
+        android:layout_centerHorizontal="true"/>
+    <!--<include layout="@layout/layout_logo_weac"/>-->
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="30dp"
+        android:id="@+id/tv_version"
+        android:text="@string/author"
+        android:textColor="@color/white_trans60"
+        android:textSize="20sp"/>
 
 </LinearLayout>

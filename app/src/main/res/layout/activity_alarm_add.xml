@@ -229,7 +229,7 @@
                 style="@style/item_text_style"
                 android:layout_centerVertical="true"
                 android:layout_alignParentLeft="true"
-                android:text="震动" />
+                android:text="振动" />
 
             <android.support.v7.widget.SwitchCompat
                 android:layout_width="wrap_content"

@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@drawable/weather_background">
 
     <com.yalantis.phoenix.PullToRefreshView
         android:id="@+id/pull_to_refresh"
@@ -12,9 +13,25 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
+
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_marginTop="30dp"
+                    android:layout_marginLeft="30dp"
+                    android:id="@+id/sun_icon"
+                    android:scaleType="fitStart"
+                    android:src="@drawable/sun_cloud_icon"/>
+
+                <!--<ImageView-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:scaleType="fitStart"-->
+                    <!--android:src="@drawable/weather_background"/>-->
 
                 <xyz.matteobattilana.library.WeatherView xmlns:app="http://schemas.android.com/apk/res-auto"
                     android:id="@+id/weather_view"
@@ -25,14 +42,14 @@
                     app:fps="40"
                     app:lifeTime="2200"
                     app:numParticles="55"
-                    app:startingWeather="RAIN" />
+                    app:startingWeather="SUN"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="120dp"
+                    android:layout_marginTop="130dp"
                     android:orientation="vertical"
-                    android:padding="15dp">
+                    android:padding="10dp">
 
                     <TextView
                         android:id="@+id/tv_weather_temp"
@@ -47,111 +64,13 @@
                         android:id="@+id/tv_weather_rain"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="15dp"
+                        android:layout_marginTop="35dp"
                         android:gravity="center"
-                        android:text="有雨"
+                        android:text="无雨"
                         android:textColor="@android:color/white"
                         android:textSize="30sp" />
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="15dp">
-
-                        <TextView
-                            android:id="@+id/tv_hum"
-                            android:layout_width="100dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="80dp"
-                            android:textSize="20sp"
-                            android:text="气压"
-                            android:textColor="@android:color/white" />
-
-                        <TextView
-                            android:id="@+id/tv_hum_value"
-                            android:layout_width="100dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginRight="80dp"
-                            android:textSize="20sp"
-                            android:text="1000"
-                            android:textColor="@android:color/white" />
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="15dp">
-
-                        <TextView
-                            android:id="@+id/tv_wet"
-                            android:layout_width="100dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="80dp"
-                            android:textSize="20sp"
-                            android:text="湿度"
-                            android:textColor="@android:color/white" />
-
-                        <TextView
-                            android:id="@+id/tv_wet_value"
-                            android:layout_width="100dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginRight="80dp"
-                            android:textSize="20sp"
-                            android:text="1000"
-                            android:textColor="@android:color/white" />
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="15dp">
-
-                        <TextView
-                            android:id="@+id/tv_pm2"
-                            android:layout_width="100dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="80dp"
-                            android:textSize="20sp"
-                            android:text="PM2.5"
-                            android:textColor="@android:color/white" />
-
-                        <TextView
-                            android:id="@+id/tv_pm2_value"
-                            android:layout_width="100dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginRight="80dp"
-                            android:textSize="20sp"
-                            android:text="1000"
-                            android:textColor="@android:color/white" />
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="15dp">
-
-                        <TextView
-                            android:id="@+id/tv_light"
-                            android:layout_width="100dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="80dp"
-                            android:textSize="20sp"
-                            android:text="照度"
-                            android:textColor="@android:color/white" />
-
-                        <TextView
-                            android:id="@+id/tv_light_value"
-                            android:layout_width="100dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginRight="80dp"
-                            android:textSize="20sp"
-                            android:text="1000"
-                            android:textColor="@android:color/white" />
-
-                    </LinearLayout>
+                    <include layout="@layout/layout_main_weather_info"></include>
 
                 </LinearLayout>
             </RelativeLayout>

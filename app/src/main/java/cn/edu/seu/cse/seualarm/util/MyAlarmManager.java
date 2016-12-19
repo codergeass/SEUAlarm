@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 
 
 import java.util.Calendar;
@@ -68,7 +69,7 @@ public class MyAlarmManager {
         bundle.putSerializable(Constants.ALARM_INFO, alarmInfo);
         Intent intent = new Intent(context, AlarmReceiver.class);
         intent.putExtras(bundle);
-
+        Log.d("MyAlarmManager", "start alarm");
 
         int id = dao.getOnlyId(alarmInfo);
         // FLAG_UPDATE_CURRENT：如果PendingIntent已经存在，保留它并且只替换它的extra数据。

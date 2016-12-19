@@ -5,23 +5,24 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:background="?selectableItemBackground">
+    <!--android:background="?selectableItemBackground">-->
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/saffron"
-        android:paddingTop="@dimen/item_padding_top"
+        android:paddingTop="2dp"
         android:paddingStart="@dimen/item_padding_start"
         android:paddingEnd="@dimen/item_padding_end"
         android:paddingRight="@dimen/item_padding_end"
         android:paddingLeft="@dimen/item_padding_start">
 
-        <include layout="@layout/alarm_time_layout"/>
+        <include layout="@layout/layout_alarm_time"/>
         
         <LinearLayout
             android:id="@+id/ll_label_delete"
             android:layout_width="match_parent"
-            android:layout_height="20dp"
+            android:layout_height="wrap_content"
             android:layout_below="@id/time_layout">
 
             <TextView
@@ -31,8 +32,8 @@
                 android:text="闹钟"
                 android:textColor="@color/white"
                 android:layout_marginLeft="10dp"
-                android:layout_marginStart="10dp"
-                android:layout_marginBottom="@dimen/item_margin_between_elements"/>
+                android:layout_marginStart="10dp"/>
+                <!--android:layout_marginBottom="@dimen/item_margin_between_elements"/>-->
 
             <Space
                 android:layout_width="0dp"
@@ -45,8 +46,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginRight="5dp"
                 android:text="雨天取消"
-                android:textColor="@color/white"
-                android:layout_marginBottom="@dimen/item_margin_between_elements"/>
+                android:textColor="@color/white"/>
+                <!--android:layout_marginBottom="@dimen/item_margin_between_elements"/>-->
 
         </LinearLayout>
 
@@ -54,7 +55,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="@dimen/item_margin_between_elements"
             android:layout_marginBottom="15dp"
             android:layout_below="@id/ll_label_delete">
 
@@ -65,8 +66,8 @@
                 android:text="周一, 周二"
                 android:textColor="@color/white"
                 android:layout_marginStart="10dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginBottom="@dimen/item_margin_between_elements"/>
+                android:layout_marginLeft="10dp"/>
+                <!--android:layout_marginBottom="@dimen/item_margin_between_elements"/>-->
 
             <Space
                 android:layout_width="0dp"

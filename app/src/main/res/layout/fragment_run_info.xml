@@ -1,36 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-    <com.prolificinteractive.materialcalendarview.MaterialCalendarView
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dp"
-        app:mcv_showOtherDates="all"
-        app:mcv_selectionColor="@color/sienna"
-        android:id="@+id/calendarView" />
-
-    <RelativeLayout
+    <!--跑步计数-->
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="20dp"
-        android:layout_below="@+id/calendarView">
+        android:id="@+id/ll_run_days"
+        android:paddingTop="20dp">
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="30dp">
+            android:layout_marginLeft="40dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
+                android:textColor="@color/white"
                 android:text="已跑次数" />
 
             <TextView
@@ -40,23 +31,27 @@
                 android:text="23"
                 android:textStyle="bold"
                 android:textColor="@color/white"
-                android:textSize="80sp"
+                android:textSize="70sp"
                 android:id="@+id/tv_days_run" />
 
         </LinearLayout>
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"/>
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_centerVertical="true"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="30dp">
+            android:layout_marginRight="40dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
+                android:textColor="@color/white"
                 android:text="剩余次数" />
 
             <TextView
@@ -66,11 +61,42 @@
                 android:text="22"
                 android:textStyle="bold"
                 android:textColor="@color/sienna"
-                android:textSize="80sp"
+                android:textSize="70sp"
                 android:id="@+id/tv_days_left" />
 
         </LinearLayout>
 
-    </RelativeLayout>
+    </LinearLayout>
 
-</RelativeLayout>
+
+    <com.prolificinteractive.materialcalendarview.MaterialCalendarView
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_gravity="center_horizontal"
+        app:mcv_headerTextAppearance="@style/HeaderTextAppearance"
+        app:mcv_dateTextAppearance="@style/CalendarTextAppearance"
+        app:mcv_weekDayTextAppearance="@style/WeeksTextAppearance"
+        app:mcv_tileSize="40dp"
+        app:mcv_showOtherDates="decorated_disabled"
+        app:mcv_selectionColor="@color/sienna"
+        app:mcv_arrowColor="@color/saffron"
+        android:id="@+id/calendarView" />
+
+    <!--<TextView-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginLeft="20dp"-->
+        <!--android:id="@+id/tv_year_month"-->
+        <!--android:text="2016年11月"/>-->
+
+    <!--详细数据-->
+    <!--<com.kelin.calendarlistview.library.CalendarListView-->
+        <!--android:id="@+id/calendar_listview"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent">-->
+
+    <!--</com.kelin.calendarlistview.library.CalendarListView>-->
+
+</LinearLayout>

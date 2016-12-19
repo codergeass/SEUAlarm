@@ -36,13 +36,13 @@ public class RingSetActivity extends AppCompatActivity {
 
     // 铃声资源
     private String[] ringName = new String[]{
-            "Everybody", "荆棘鸟", "加勒比海盗", "圣斗士(慎点)",
-            "Flower", "Time Traval", "Thank you for",
-            "律动", "Morning", "Echo", "Alarm Clock"};
+            "太阳照常升起", "爱的劳工", "Everybody", "被禁忌的游戏",
+            "Flower", "水车", "米店",
+            "律动", "Morning", "杀死那个石家庄人", "Alarm Clock"};
     private String[] songId = new String[]{
-            "everybody.mp3", "bird.mp3", "galebi.mp3", "shendoushi.mp3",
-            "flower.mp3", "timetravel.mp3", "thankufor.mp3", "mx1.mp3",
-            "mx2.mp3", "echo.mp3", "clock.mp3"};
+            "太阳照常升起.aac", "爱的劳工.amr", "everybody.mp3", "被禁忌的游戏.aac",
+            "flower.mp3", "水车.aac", "米店.amr",
+            "mx1.mp3", "mx2.mp3", "杀死那个石家庄人.amr", "clock.mp3"};
 
 
     private ArrayList<String> ringList;

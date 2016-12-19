@@ -2,6 +2,8 @@ package cn.edu.seu.cse.seualarm.controler.alarm;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.view.ViewCompat;
+import android.support.v4.view.ViewPropertyAnimatorListener;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SwitchCompat;
 import android.text.InputType;
@@ -49,6 +51,7 @@ public class AlarmAddActivity extends AppCompatActivity implements View.OnClickL
     private int position;
     private boolean vibrate;
     private boolean rain;
+    private AlarmAddActivity alarmAddActivity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -167,26 +170,32 @@ public class AlarmAddActivity extends AppCompatActivity implements View.OnClickL
         alarmInfo = (AlarmInfo) bundle.getSerializable(Constants.ALARM_INFO);
         position = bundle.getInt(Constants.ALARM_POSITION, -1);
 
+//        alarmInfo = (AlarmInfo) savedInstanceState.getSerializable(Constants.ALARM_INFO);
+//        position = savedInstanceState.getInt(Constants.ALARM_POSITION, -1);
+
         if (position == -1) {
             Log.d("alarm", "get add alarm call");
             isNew = true;
-            initView();
+//            initView();
         } else {
             isNew = false;
             Log.d("alarm", alarmInfo.getSId());
             Log.d("alarm", alarmInfo.toString());
 
-            ringID = alarmInfo.getRingResId();
-            bindData(alarmInfo);
-            bindWeeks(alarmInfo.getDayOfWeek());
-            bindDays(alarmInfo.getDayOfWeek());
+//            ringID = alarmInfo.getRingResId();
+//            bindData(alarmInfo);
+//            bindWeeks(alarmInfo.getDayOfWeek());
+//            bindDays(alarmInfo.getDayOfWeek());
         }
 
+        initView();
+        alarmAddActivity = this;
     }
 
     // 新建闹铃
     private void initView() {
-        alarmInfo = new AlarmInfo();
+//        alarmInfo = new AlarmInfo();
+        ringID = alarmInfo.getRingResId();
         bindData(alarmInfo);
         bindWeeks(alarmInfo.getDayOfWeek());
         bindDays(alarmInfo.getDayOfWeek());
@@ -289,85 +298,118 @@ public class AlarmAddActivity extends AppCompatActivity implements View.OnClickL
         String sTime = "" + sh + ":" + sm;
         return sTime;
     }
-
+    // 监听事件
     @Override
     public void onClick(View view) {
-        switch (view.getId()) {
-            ////////////////////////////////////////////////////////////////////////////
-            // 更改时间
-            case R.id.time_rl:
-                NumberPadTimePickerDialog dialog = NumberPadTimePickerDialog.newInstance(
-                        new BottomSheetTimePickerDialog.OnTimeSetListener() {
-                            @Override
-                            public void onTimeSet(ViewGroup viewGroup, int hourOfDay, int minute) {
-                                alarmInfo.setHour(hourOfDay);
-                                alarmInfo.setMinute(minute);
-                                String stime = getFullTime(hourOfDay, minute);
-                                tv_time_value.setText(stime);
-                            }
+        ViewCompat.animate(view)
+                .setDuration(200)
+                .scaleX(0.9f)
+                .scaleY(0.9f)
+                .setInterpolator(new CycleInterpolator())
+                .setListener(new ViewPropertyAnimatorListener() {
+                    @Override
+                    public void onAnimationStart(final View view) {
+
+                    }
+
+                    @Override
+                    public void onAnimationEnd(final View view) {
+                        switch (view.getId()) {
+                            ////////////////////////////////////////////////////////////////////////////
+                            // 更改时间
+                            case R.id.time_rl:
+                                NumberPadTimePickerDialog dialog = NumberPadTimePickerDialog.newInstance(
+                                        new BottomSheetTimePickerDialog.OnTimeSetListener() {
+                                            @Override
+                                            public void onTimeSet(ViewGroup viewGroup, int hourOfDay, int minute) {
+                                                alarmInfo.setHour(hourOfDay);
+                                                alarmInfo.setMinute(minute);
+                                                String stime = getFullTime(hourOfDay, minute);
+                                                tv_time_value.setText(stime);
+                                            }
+                                        }
+                                );
+                                dialog.show(getSupportFragmentManager(), "AlarmAddActivity");
+                                break;
+
+                            /////////////////////////////////////////////////////////////////////////////
+                            // 更改标签
+                            case R.id.label_rl:
+                                // 更改标签
+                                new MaterialDialog.Builder(alarmAddActivity)
+                                        .title("编辑标签")
+                                        .negativeText("取消")
+                                        .positiveText("确定")
+                                        .inputType(InputType.TYPE_TEXT_VARIATION_PERSON_NAME)
+                                        .inputRange(0, 10)
+                                        .input("标签", alarmInfo.getLabel(), new MaterialDialog.InputCallback() {
+                                            @Override
+                                            public void onInput(MaterialDialog dialog, CharSequence input) {
+                                                alarmInfo.setLabel(input.toString());
+                                                tv_label_value.setText(input.toString());
+                                            }
+                                        }).show();
+                                break;
+
+                            /////////////////////////////////////////////////////////////////////////////
+                            // 更改闹铃
+                            case R.id.ring_rl:
+                                Bundle bundle= new Bundle();
+                                Intent ringSetItent = new Intent(AlarmAddActivity.this, RingSetActivity.class);
+                                bundle.putString(Constants.RING_NAME, alarmInfo.getRingtone());
+                                bundle.putString(Constants.RING_ID, alarmInfo.getRingResId());
+                                ringSetItent.putExtras(bundle);
+                                startActivityForResult(ringSetItent, Constants.ASK_RING_SET);
+
+                                break;
+
+                            //////////////////////////////////////////////////////////////////////////////
+                            // 震动
+                            case R.id.vibrator_if:
+                                vibrate = !vibrate;
+                                break;
+
+                            //////////////////////////////////////////////////////////////////////////////
+                            // 雨天取消
+                            case R.id.weather_if:
+                                rain = !rain;
+                                break;
+
+                            /////////////////////////////////////////////////////////////////////////////
+                            // 取消
+                            case R.id.alarm_add_cancel:
+                                // 取消后活动清除
+                                finish();
+                                break;
+
+                            /////////////////////////////////////////////////////////////////////////////
+                            // 完成
+                            case R.id.alarm_add_ok:
+                                setClock();
+                                finish();
+                                break;
+                            default:
+                                break;
                         }
-                );
-                dialog.show(getSupportFragmentManager(), "AlarmAddActivity");
-                break;
+                    }
 
-            /////////////////////////////////////////////////////////////////////////////
-            // 更改标签
-            case R.id.label_rl:
-                // 更改标签
-                new MaterialDialog.Builder(this)
-                        .title("编辑标签")
-                        .negativeText("取消")
-                        .positiveText("确定")
-                        .inputType(InputType.TYPE_TEXT_VARIATION_PERSON_NAME)
-                        .inputRange(0, 10)
-                        .input("标签", alarmInfo.getLabel(), new MaterialDialog.InputCallback() {
-                            @Override
-                            public void onInput(MaterialDialog dialog, CharSequence input) {
-                                alarmInfo.setLabel(input.toString());
-                                tv_label_value.setText(input.toString());
-                            }
-                        }).show();
-                break;
+                    @Override
+                    public void onAnimationCancel(final View view) {
 
-            /////////////////////////////////////////////////////////////////////////////
-            // 更改闹铃
-            case R.id.ring_rl:
-                Bundle bundle= new Bundle();
-                Intent ringSetItent = new Intent(AlarmAddActivity.this, RingSetActivity.class);
-                bundle.putString(Constants.RING_NAME, alarmInfo.getRingtone());
-                bundle.putString(Constants.RING_ID, alarmInfo.getRingResId());
-                ringSetItent.putExtras(bundle);
-                startActivityForResult(ringSetItent, Constants.ASK_RING_SET);
+                    }
+                })
+                .withLayer()
+                .start();
+    }
 
-                break;
+    // 点击动画
+    private class CycleInterpolator implements android.view.animation.Interpolator {
 
-            //////////////////////////////////////////////////////////////////////////////
-            // 震动
-            case R.id.vibrator_if:
-                vibrate = !vibrate;
-                break;
+        private final float mCycles = 0.5f;
 
-            //////////////////////////////////////////////////////////////////////////////
-            // 雨天取消
-            case R.id.weather_if:
-                rain = !rain;
-                break;
-
-            /////////////////////////////////////////////////////////////////////////////
-            // 取消
-            case R.id.alarm_add_cancel:
-                // 取消后活动清除
-                finish();
-                break;
-
-            /////////////////////////////////////////////////////////////////////////////
-            // 完成
-            case R.id.alarm_add_ok:
-                setClock();
-                finish();
-                break;
-            default:
-                break;
+        @Override
+        public float getInterpolation(final float input) {
+            return (float) Math.sin(2.0f * mCycles * Math.PI * input);
         }
     }
 

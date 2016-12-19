@@ -18,14 +18,15 @@ import cn.edu.seu.cse.seualarm.util.Constants;
 
 public class AlarmInfoDao {
     private AlarmInfoDbHelper mHelper;
+
     public AlarmInfoDao(Context mContext) {
-        mHelper=new AlarmInfoDbHelper(mContext);
+        mHelper = new AlarmInfoDbHelper(mContext);
     }
 
-    public void addAlarmInfo(AlarmInfo alarmInfo){
+    public void addAlarmInfo(AlarmInfo alarmInfo) {
         //添加一个闹钟
-        SQLiteDatabase db=mHelper.getWritableDatabase();
-        ContentValues values=new ContentValues();
+        SQLiteDatabase db = mHelper.getWritableDatabase();
+        ContentValues values = new ContentValues();
 
         values.put(Constants.ALARM_HOUR, alarmInfo.getHour());
         values.put(Constants.ALARM_MINUTE, alarmInfo.getMinute());
@@ -40,20 +41,21 @@ public class AlarmInfoDao {
         db.insert(Constants.ALARM_TABLE, null, values);
         //Toast.makeText(mContext, "闹钟设置成功", Toast.LENGTH_SHORT).show();
 
-        if(db!=null){
+        if (db != null) {
             db.close();
             values.clear();
         }
     }
-    public AlarmInfo findById(String alarmId){
-        SQLiteDatabase db=mHelper.getWritableDatabase();
-        Cursor cursor=db.query(Constants.ALARM_TABLE, null, Constants.ALARM_SID +"=?", new String[]{alarmId}, null, null, null);
-        AlarmInfo alarmInfo=new AlarmInfo();
-        if(cursor!=null){
-            //Log.d("alarm","cusor不为空");
-            if (cursor.moveToNext()){
 
-                alarmInfo.setHour(cursor.getInt(cursor.getColumnIndex(Constants.ALARM_HOUR))) ;
+    public AlarmInfo findById(String alarmId) {
+        SQLiteDatabase db = mHelper.getWritableDatabase();
+        Cursor cursor = db.query(Constants.ALARM_TABLE, null, Constants.ALARM_SID + "=?", new String[]{alarmId}, null, null, null);
+        AlarmInfo alarmInfo = new AlarmInfo();
+        if (cursor != null) {
+            //Log.d("alarm","cusor不为空");
+            if (cursor.moveToNext()) {
+
+                alarmInfo.setHour(cursor.getInt(cursor.getColumnIndex(Constants.ALARM_HOUR)));
                 alarmInfo.setMinute(cursor.getInt(cursor.getColumnIndex(Constants.ALARM_MINUTE)));
                 alarmInfo.setEnable(cursor.getInt(cursor.getColumnIndex(Constants.ALARM_ENABLE)));
                 alarmInfo.setVibrate(cursor.getInt(cursor.getColumnIndex(Constants.ALARM_VIBRATE)));
@@ -62,13 +64,13 @@ public class AlarmInfoDao {
                 alarmInfo.setRingResId(cursor.getString(cursor.getColumnIndex(Constants.ALARM_RES_ID)));
                 alarmInfo.setLabel(cursor.getString(cursor.getColumnIndex(Constants.ALARM_LABEL)));
                 alarmInfo.setSId(cursor.getString(cursor.getColumnIndex(Constants.ALARM_SID)));
-                String dayOfWeek=cursor.getString(cursor.getColumnIndex(Constants.ALARM_REPEAT_DAY));
+                String dayOfWeek = cursor.getString(cursor.getColumnIndex(Constants.ALARM_REPEAT_DAY));
 
-                Log.d("alarm",dayOfWeek);
-                int[] day=getAlarmDayofWeek(dayOfWeek);
-                if(day!=null){
+                Log.d("alarm", dayOfWeek);
+                int[] day = getAlarmDayofWeek(dayOfWeek);
+                if (day != null) {
                     // Log.d("alarm","数据库中重复天数不为空");
-                }else {
+                } else {
                     // Log.d("alarm","数据库中重复天数为空");
                 }
                 alarmInfo.setDayOfWeek(day);
@@ -76,16 +78,17 @@ public class AlarmInfoDao {
         }
         return alarmInfo;
     }
-    public AlarmInfo findByOnlyId(String alarmId){
-        SQLiteDatabase db=mHelper.getWritableDatabase();
-        Cursor cursor=db.query(Constants.ALARM_TABLE, null, "id=?",
+
+    public AlarmInfo findByOnlyId(String alarmId) {
+        SQLiteDatabase db = mHelper.getWritableDatabase();
+        Cursor cursor = db.query(Constants.ALARM_TABLE, null, "id=?",
                 new String[]{Constants.ALARM_SID}, null, null, null);
 
-        AlarmInfo alarmInfo=new AlarmInfo();
-        if(cursor!=null){
-            while (cursor.moveToNext()){
+        AlarmInfo alarmInfo = new AlarmInfo();
+        if (cursor != null) {
+            while (cursor.moveToNext()) {
 
-                alarmInfo.setHour(cursor.getInt(cursor.getColumnIndex(Constants.ALARM_HOUR))) ;
+                alarmInfo.setHour(cursor.getInt(cursor.getColumnIndex(Constants.ALARM_HOUR)));
                 alarmInfo.setMinute(cursor.getInt(cursor.getColumnIndex(Constants.ALARM_MINUTE)));
                 alarmInfo.setEnable(cursor.getInt(cursor.getColumnIndex(Constants.ALARM_ENABLE)));
                 alarmInfo.setVibrate(cursor.getInt(cursor.getColumnIndex(Constants.ALARM_VIBRATE)));
@@ -94,23 +97,24 @@ public class AlarmInfoDao {
                 alarmInfo.setRingResId(cursor.getString(cursor.getColumnIndex(Constants.ALARM_RES_ID)));
                 alarmInfo.setSId(cursor.getString(cursor.getColumnIndex(Constants.ALARM_SID)));
                 alarmInfo.setLabel(cursor.getString(cursor.getColumnIndex(Constants.ALARM_LABEL)));
-                String dayOfWeek=cursor.getString(cursor.getColumnIndex(Constants.ALARM_REPEAT_DAY));
+                String dayOfWeek = cursor.getString(cursor.getColumnIndex(Constants.ALARM_REPEAT_DAY));
 
-                Log.d("alarm",dayOfWeek);
-                int[] day=getAlarmDayofWeek(dayOfWeek);
+                Log.d("alarm", dayOfWeek);
+                int[] day = getAlarmDayofWeek(dayOfWeek);
                 alarmInfo.setDayOfWeek(day);
             }
         }
         return alarmInfo;
     }
-    public List<AlarmInfo> getAllInfo(){
+
+    public List<AlarmInfo> getAllInfo() {
         List<AlarmInfo> list = new ArrayList<AlarmInfo>();
         SQLiteDatabase db = mHelper.getWritableDatabase();
         Cursor cursor = db.query(Constants.ALARM_TABLE, null, null, null, null, null, null);
-        if(cursor != null){
-            while(cursor.moveToNext()){
-                AlarmInfo alarmInfo=new AlarmInfo();
-                alarmInfo.setHour(cursor.getInt(cursor.getColumnIndex(Constants.ALARM_HOUR))) ;
+        if (cursor != null) {
+            while (cursor.moveToNext()) {
+                AlarmInfo alarmInfo = new AlarmInfo();
+                alarmInfo.setHour(cursor.getInt(cursor.getColumnIndex(Constants.ALARM_HOUR)));
                 alarmInfo.setMinute(cursor.getInt(cursor.getColumnIndex(Constants.ALARM_MINUTE)));
                 alarmInfo.setEnable(cursor.getInt(cursor.getColumnIndex(Constants.ALARM_ENABLE)));
                 alarmInfo.setVibrate(cursor.getInt(cursor.getColumnIndex(Constants.ALARM_VIBRATE)));
@@ -119,16 +123,16 @@ public class AlarmInfoDao {
                 alarmInfo.setRingResId(cursor.getString(cursor.getColumnIndex(Constants.ALARM_RES_ID)));
                 alarmInfo.setLabel(cursor.getString(cursor.getColumnIndex(Constants.ALARM_LABEL)));
                 alarmInfo.setSId(cursor.getString(cursor.getColumnIndex(Constants.ALARM_SID)));
-                String dayOfWeek=cursor.getString(cursor.getColumnIndex(Constants.ALARM_REPEAT_DAY));
+                String dayOfWeek = cursor.getString(cursor.getColumnIndex(Constants.ALARM_REPEAT_DAY));
 
-                Log.d("alarm",dayOfWeek);
-                int[] day=getAlarmDayofWeek(dayOfWeek);
+                Log.d("alarm", dayOfWeek);
+                int[] day = getAlarmDayofWeek(dayOfWeek);
                 alarmInfo.setDayOfWeek(day);
                 list.add(alarmInfo);
             }
             cursor.close();
         }
-        if(db!=null){
+        if (db != null) {
             db.close();
         }
         return list;
@@ -137,9 +141,9 @@ public class AlarmInfoDao {
     /*
     *删除闹钟
     */
-    public void deleteAlarm(AlarmInfo alarmInfo){
-        SQLiteDatabase db=mHelper.getWritableDatabase();
-        db.delete(Constants.ALARM_TABLE, Constants.ALARM_SID +" = ?",new String[]{alarmInfo.getSId()});
+    public void deleteAlarm(AlarmInfo alarmInfo) {
+        SQLiteDatabase db = mHelper.getWritableDatabase();
+        db.delete(Constants.ALARM_TABLE, Constants.ALARM_SID + " = ?", new String[]{alarmInfo.getSId()});
 
         //Toast.makeText(mContext, "闹钟删除成功", Toast.LENGTH_SHORT).show();
         db.close();
@@ -148,10 +152,10 @@ public class AlarmInfoDao {
     /*
     *编辑闹钟
     */
-    public void updateAlarm(AlarmInfo alarmInfo){
-        SQLiteDatabase db=mHelper.getWritableDatabase();
+    public void updateAlarm(AlarmInfo alarmInfo) {
+        SQLiteDatabase db = mHelper.getWritableDatabase();
 
-        ContentValues values=new ContentValues();
+        ContentValues values = new ContentValues();
         values.put(Constants.ALARM_HOUR, alarmInfo.getHour());
         values.put(Constants.ALARM_MINUTE, alarmInfo.getMinute());
         values.put(Constants.ALARM_ENABLE, alarmInfo.getEnable());
@@ -168,19 +172,20 @@ public class AlarmInfoDao {
         //Toast.makeText(mContext, "闹钟修改成功", Toast.LENGTH_SHORT).show();
         db.close();
 
-        Log.d("alarm","AlarmDao update完成");
+        Log.d("alarm", "AlarmDao update完成");
     }
-    public int getOnlyId(AlarmInfo alarmInfo){
+
+    public int getOnlyId(AlarmInfo alarmInfo) {
         SQLiteDatabase db = mHelper.getWritableDatabase();
         int id = -1;
         Cursor cusor = db.query(Constants.ALARM_TABLE, new String[]{"id"}, Constants.ALARM_SID + " = ?",
-                new String[]{alarmInfo.getSId()},null,null,null);
-        if(cusor != null){
-            if(cusor.moveToNext()){
+                new String[]{alarmInfo.getSId()}, null, null, null);
+        if (cusor != null) {
+            if (cusor.moveToNext()) {
                 id = cusor.getInt(cusor.getColumnIndex("id"));
             }
         }
-        if(db != null){
+        if (db != null) {
             db.close();
         }
         cusor.close();
@@ -191,10 +196,10 @@ public class AlarmInfoDao {
         if (dayOfWeek.equals(""))
             return new int[0];
 
-        String[] change= dayOfWeek.split(",");
-        int[] Day=new int[change.length];
-        for (int i=0;i<change.length;i++){
-            Day[i]=Integer.parseInt(change[i]);
+        String[] change = dayOfWeek.split(",");
+        int[] Day = new int[change.length];
+        for (int i = 0; i < change.length; i++) {
+            Day[i] = Integer.parseInt(change[i]);
         }
         return Day;
     }

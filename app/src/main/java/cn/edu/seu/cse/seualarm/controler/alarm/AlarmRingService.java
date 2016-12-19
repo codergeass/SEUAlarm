@@ -9,14 +9,18 @@ import android.content.Intent;
 import android.content.res.AssetFileDescriptor;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.os.Bundle;
 import android.os.IBinder;
 import android.os.Vibrator;
 import android.util.Log;
 
 import java.io.IOException;
 
+import cn.edu.seu.cse.seualarm.module.AlarmInfo;
+import cn.edu.seu.cse.seualarm.util.Constants;
+
 public class AlarmRingService extends Service {
-    private String song;
+    private AlarmInfo alarmInfo;
     private MediaPlayer mPlayer;
     private Vibrator mVibrator;
 
@@ -31,11 +35,17 @@ public class AlarmRingService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        song =intent.getStringExtra("resid");
-        if (song == null){
-            song ="everybody.mp3";
+        Bundle bundle = intent.getExtras();
+        alarmInfo = (AlarmInfo) bundle.getSerializable(Constants.ALARM_INFO);
+        if (alarmInfo == null)
+            Log.d("alarm", "alarmringservice does not get alarminfo");
+
+        ringTheAlarm(alarmInfo.getRingResId());
+        if (alarmInfo.getVibrate() == 1) {
+            Log.d("alarm", "alarminfo vibrate 1");
+            startVibrate();
         }
-        ringTheAlarm(song);
+
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -87,7 +97,7 @@ public class AlarmRingService extends Service {
     private void startVibrate() {
         mVibrator = (Vibrator)getSystemService(VIBRATOR_SERVICE);
         if(mVibrator.hasVibrator()){
-            mVibrator.vibrate(new long[]{500, 1500, 500, 1500}, 0);//off on off on
+            mVibrator.vibrate(new long[]{200, 2200, 200, 2200}, 0);//off on off on
         }
     }
 
