@@ -67,4 +67,6 @@ public class Constants {
     public static final String RUN_TODAY = "runtoday";
     public static final String WEATHER_SRC = "waethersrc";
     public static final String ALARM_WEATHER = "alarmweather";
+    public static final String IP_WEB = "ipweb";
+    public static final String CITY_NAME = "cityname";
 }

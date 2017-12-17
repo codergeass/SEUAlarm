@@ -54,8 +54,8 @@ public class CustomRingSetActivity extends AppCompatActivity {
             toolbar.setNavigationOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    doneRing();
-                    finish();
+//                    doneRing();
+                    onBackPressed();
                 }
             });
         }
@@ -105,6 +105,7 @@ public class CustomRingSetActivity extends AppCompatActivity {
     private void initAdapter() {
         mAdapter = new myAdapter();
         mListView.setAdapter(mAdapter);
+        selctCustomRing = mListRing.get(0);
         initListener();
     }
 
@@ -116,7 +117,6 @@ public class CustomRingSetActivity extends AppCompatActivity {
                 ringTheSong(position);
                 //2.重新赋值
                 currentItem = position;
-                selctCustomRing = mListRing.get(position);
                 mAdapter.notifyDataSetChanged();
             }
         });
@@ -191,17 +191,19 @@ public class CustomRingSetActivity extends AppCompatActivity {
         if (mListRing.size() > 0) {
             Intent intent = new Intent();
             Bundle bundle = new Bundle();
+            selctCustomRing = mListRing.get(currentItem);
             bundle.putSerializable(Constants.CUSTOM_RING, selctCustomRing);
             intent.putExtras(bundle);
             setResult(Constants.CUSTOM_RING_SET_DONE, intent);
         }
         Log.d("alarm", "custom ring set done");
-        finish();
+//        finish();
     }
 
     @Override
     public void onBackPressed() {
         doneRing();
+        super.onBackPressed();
     }
 
     @Override

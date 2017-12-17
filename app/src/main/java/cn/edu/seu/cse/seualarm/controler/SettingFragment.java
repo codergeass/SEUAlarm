@@ -22,13 +22,13 @@ import cn.edu.seu.cse.seualarm.util.Constants;
 import cn.edu.seu.cse.seualarm.util.PrefUtil;
 
 public class SettingFragment extends BaseFragment implements View.OnClickListener{
-    private RelativeLayout run_rl, run_reset_rl;
-    private TextView tv_run_value, tv_weather_src_value;
+    private RelativeLayout run_rl, run_reset_rl, city_rl;
+    private TextView tv_run_value, tv_weather_src_value, tv_city_value;
     private SwitchCompat alarm_weather_if;
     private RadioButton []srcs;
     private int src;
     private boolean alarm_weather;
-    private String runDest, weather_src;
+    private String runDest, weather_src, cityName, ipAddress;
     private String []ssrc = new String[]{ "公共网络", "局域网络", "公共气象源"};
 
     @Override
@@ -36,9 +36,11 @@ public class SettingFragment extends BaseFragment implements View.OnClickListene
         int totalTimes = PrefUtil.getInt(getContext(), Constants.TOTAL_TIMES, 45);
         alarm_weather = PrefUtil.getBoolean(getContext(), Constants.ALARM_WEATHER, true);
         src = PrefUtil.getInt(getContext(), Constants.WEATHER_SRC, 0);
+        cityName = PrefUtil.getString(getContext(), Constants.CITY_NAME, "南京");
+        ipAddress = PrefUtil.getString(getContext(), Constants.IP_WEB, "223.3.173.237");
         srcs = new RadioButton[3];
         runDest = "" + totalTimes;
-        weather_src = ssrc[src];
+        weather_src = src == 1 ? ipAddress : ssrc[src];
 
         super.onCreate(savedInstanceState);
     }
@@ -47,11 +49,14 @@ public class SettingFragment extends BaseFragment implements View.OnClickListene
     public View initView() {
         View view = View.inflate(mActivity, R.layout.fragment_setting, null);
 
+        city_rl = (RelativeLayout) view.findViewById(R.id.city_rl);
         run_rl = (RelativeLayout) view.findViewById(R.id.run_rl);
         run_reset_rl = (RelativeLayout) view.findViewById(R.id.run_reset_rl);
+        city_rl.setOnClickListener(this);
         run_rl.setOnClickListener(this);
         run_reset_rl.setOnClickListener(this);
 
+        tv_city_value = (TextView) view.findViewById(R.id.tv_city_value);
         tv_run_value = (TextView) view.findViewById(R.id.tv_run_value);
         tv_weather_src_value = (TextView) view.findViewById(R.id.tv_weather_src_value);
 
@@ -73,6 +78,7 @@ public class SettingFragment extends BaseFragment implements View.OnClickListene
         srcs[src].setChecked(true);
         tv_weather_src_value.setText(weather_src);
         tv_run_value.setText(runDest);
+        tv_city_value.setText(cityName);
         alarm_weather_if.setChecked(alarm_weather);
 
         super.initData();
@@ -106,10 +112,32 @@ public class SettingFragment extends BaseFragment implements View.OnClickListene
                                 src = 1;
                                 srcs[0].setChecked(false);
                                 srcs[2].setChecked(false);
+
+                                new MaterialDialog.Builder(getContext())
+                                        .title("设置网络地址")
+                                        .negativeText("取消")
+                                        .positiveText("确定")
+                                        .inputType(InputType.TYPE_TEXT_VARIATION_POSTAL_ADDRESS)
+                                        .inputRange(0, 15)
+                                        .input("输入网络IP地址", PrefUtil.getString(getContext(), Constants.IP_WEB, "223.3.173.237"), new MaterialDialog.InputCallback() {
+                                            @Override
+                                            public void onInput(@NonNull MaterialDialog dialog, CharSequence input) {
+                                            }
+                                        })
+                                        .onPositive(new MaterialDialog.SingleButtonCallback() {
+                                            @Override
+                                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                                ipAddress = dialog.getInputEditText().getText().toString();
+                                                PrefUtil.putString(getContext(), Constants.IP_WEB, ipAddress);
+                                                weather_src = ipAddress;
+                                                tv_weather_src_value.setText(ipAddress);
+                                            }
+                                        })
+                                        .show();
+
                                 PrefUtil.putInt(getContext(), Constants.WEATHER_SRC, src);
-                                weather_src = ssrc[src];
-                                tv_weather_src_value.setText(ssrc[src]);
                                 break;
+
                             case R.id.rb_other_net:
                                 src = 2;
                                 srcs[0].setChecked(false);
@@ -117,6 +145,30 @@ public class SettingFragment extends BaseFragment implements View.OnClickListene
                                 PrefUtil.putInt(getContext(), Constants.WEATHER_SRC, src);
                                 weather_src = ssrc[src];
                                 tv_weather_src_value.setText(ssrc[src]);
+                                break;
+
+                            // 天气预报城市
+                            case R.id.city_rl:
+                                new MaterialDialog.Builder(getContext())
+                                        .title("设置天气预报城市")
+                                        .negativeText("取消")
+                                        .positiveText("确定")
+                                        .inputType(InputType.TYPE_TEXT_VARIATION_POSTAL_ADDRESS)
+                                        .inputRange(0, 15)
+                                        .input("输入城市名", PrefUtil.getString(getContext(), Constants.CITY_NAME, "南京"), new MaterialDialog.InputCallback() {
+                                            @Override
+                                            public void onInput(@NonNull MaterialDialog dialog, CharSequence input) {
+                                            }
+                                        })
+                                        .onPositive(new MaterialDialog.SingleButtonCallback() {
+                                            @Override
+                                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                                cityName = dialog.getInputEditText().getText().toString();
+                                                tv_city_value.setText(cityName);
+                                                PrefUtil.putString(getContext(), Constants.CITY_NAME, dialog.getInputEditText().getText().toString());
+                                            }
+                                        })
+                                        .show();
                                 break;
 
                             ////////////////////////////////////////////////////////////////////////////

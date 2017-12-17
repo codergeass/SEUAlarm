@@ -34,6 +34,7 @@ public class AlarmRingDialog extends Dialog {
     private Button ok_btn;
 //    private WeatherIconView weatherIconView;
     private ImageView weatherIconView;
+    private ImageView alarmIconView;
     private TextView tv_temp, tv_wet, tv_hum, tv_light, tv_pm, tv_title, tv_time;
     private TextView tv_temp_show, tv_wet_show, tv_hum_show, tv_light_show, tv_pm_show;
     private LinearLayout ll_weather;
@@ -48,6 +49,7 @@ public class AlarmRingDialog extends Dialog {
         ok_btn = (Button) view.findViewById(R.id.alarm_ring_ok);
 //        weatherIconView = (WeatherIconView) view.findViewById(R.id.weather_icon);
         weatherIconView = (ImageView) view.findViewById(R.id.weather_icon);
+        alarmIconView = (ImageView) view.findViewById(R.id.clock_view);
 
         tv_temp = (TextView) view.findViewById(R.id.tv_weather_info_temp);
         tv_wet = (TextView) view.findViewById(R.id.tv_weather_info_wet);
@@ -125,9 +127,11 @@ public class AlarmRingDialog extends Dialog {
         tv_pm.setText(String.valueOf(weatherInfo.getmPM()));
 
         if (src == 2) {
+            tv_pm_show.setText("PM2.5");
             tv_hum_show.setText("风向");
             tv_light_show.setText("风力");
         } else {
+            tv_pm_show.setText("颗粒物");
             tv_hum_show.setText("气压");
             tv_light_show.setText("照度");
         }
@@ -145,6 +149,12 @@ public class AlarmRingDialog extends Dialog {
                 weatherIconView.setImageResource(R.drawable.weather_rain);
 //                weatherIconView.setIconResource(context.getResources().getString(R.string.wi_night_rain));
             }
+        } else if (weatherInfo.getmRain().contains("雪")) {
+            weatherIconView.setImageResource(R.drawable.weather_snow);
+        } else if (weatherInfo.getmRain().contains("雷")) {
+            weatherIconView.setImageResource(R.drawable.weather_thunder);
+        } else if (weatherInfo.getmRain().contains("风")) {
+            weatherIconView.setImageResource(R.drawable.weather_windy);
         } else {
             Log.d("alarm", "weather sunny");
             if (hour >= 6 && hour <= 18) {
@@ -175,7 +185,8 @@ public class AlarmRingDialog extends Dialog {
         tv_pm_show.setVisibility(View.INVISIBLE);
 
         weatherIconView.setVisibility(View.INVISIBLE);
-        ll_weather.setVisibility(View.INVISIBLE);
+        ll_weather.setVisibility(View.GONE);
+        alarmIconView.setVisibility(View.VISIBLE);
 
         return this;
     }

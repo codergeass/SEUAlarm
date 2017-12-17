@@ -7,7 +7,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp">
+        android:layout_marginTop="5dp">
 
         <TextView
             android:id="@+id/tv_wet"
@@ -37,7 +37,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp">
+        android:layout_marginTop="5dp">
 
         <TextView
             android:id="@+id/tv_hum"
@@ -67,7 +67,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp">
+        android:layout_marginTop="5dp">
 
         <TextView
             android:id="@+id/tv_light"
@@ -97,7 +97,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp">
+        android:layout_marginTop="5dp">
 
         <TextView
             android:id="@+id/tv_pm2"
@@ -123,7 +123,36 @@
             android:textColor="@android:color/white" />
 
     </LinearLayout>
+    <!--二氧化硫-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp">
 
+        <TextView
+            android:id="@+id/tv_so2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="60dp"
+            android:textSize="20sp"
+            android:text="二氧化硫"
+            android:textColor="@android:color/white" />
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"/>
+
+        <TextView
+            android:id="@+id/tv_so2_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="60dp"
+            android:textSize="20sp"
+            android:text="1000"
+            android:textColor="@android:color/white" />
+
+    </LinearLayout>
 
     <TextView
         android:layout_width="match_parent"

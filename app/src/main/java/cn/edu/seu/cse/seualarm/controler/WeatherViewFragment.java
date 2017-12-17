@@ -40,6 +40,8 @@ public class WeatherViewFragment extends Fragment {
     private TextView tvHum;
     private TextView mWet;
     private TextView mPM;
+    private TextView tvPM;
+    private TextView mSO;
     private TextView mLight;
     private TextView tvLight;
     private TextView mRefresh;
@@ -107,6 +109,7 @@ public class WeatherViewFragment extends Fragment {
         Log.d("alarm", "weatherviewfragment oncreate loadok:" + loadOk);
         refreshTime = new Date();
         if (!loadOk) {
+            mWeatherInfo = new WeatherInfo();
             updateData();
         }
     }
@@ -144,11 +147,13 @@ public class WeatherViewFragment extends Fragment {
         mWet = (TextView) rootView.findViewById(R.id.tv_wet_value);
         mRain = (TextView) rootView.findViewById(R.id.tv_weather_rain);
         mPM = (TextView) rootView.findViewById(R.id.tv_pm2_value);
+        mSO = (TextView) rootView.findViewById(R.id.tv_so2_value);
         mLight = (TextView) rootView.findViewById(R.id.tv_light_value);
         mRefresh = (TextView) rootView.findViewById(R.id.tv_refresh_value);
         mRefreshName = (TextView) rootView.findViewById(R.id.tv_refresh);
         mSunView = (ImageView) rootView.findViewById(R.id.sun_icon);
 
+        tvPM = (TextView) rootView.findViewById(R.id.tv_pm2);
         tvHum = (TextView) rootView.findViewById(R.id.tv_hum);
         tvLight = (TextView) rootView.findViewById(R.id.tv_light);
         // mWeatherInfo = new WeatherInfo();
@@ -229,7 +234,7 @@ public class WeatherViewFragment extends Fragment {
             mRefreshName.setVisibility(View.VISIBLE);
             mRefresh.setText(mWeatherInfo.getmRefresh());
         }
-        else {
+        else if (isInit) {
             mRefreshName.setVisibility(View.GONE);
             mRefresh.setText("数据未更新");
         }
@@ -245,14 +250,21 @@ public class WeatherViewFragment extends Fragment {
     private void updateData() {
         if (NetworkUtil.isNetworkAvailable(getContext())) {
             src = PrefUtil.getInt(getContext(), cn.edu.seu.cse.seualarm.util.Constants.WEATHER_SRC, 0);
-            WeatherInfoClient.getWeathInfo(src);
+            if (src == 1)
+                WeatherInfoClient.getLocalWeatherInfo(
+                        PrefUtil.getString(getContext(), cn.edu.seu.cse.seualarm.util.Constants.IP_WEB, "223.3.173.237"));
+            else if (src == 2)
+                WeatherInfoClient.getPublicWeatherInfo(
+                        PrefUtil.getString(getContext(), cn.edu.seu.cse.seualarm.util.Constants.CITY_NAME, "南京"));
+            else
+                WeatherInfoClient.getWeathInfo();
 
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     if (!WeatherInfoClient.resCode) {
-                        if (isInit && !loadOk)
-                            mWeatherInfo = new WeatherInfo();
+//                        if (isInit && !loadOk)
+//                            mWeatherInfo = new WeatherInfo();
                         final Snackbar snackbar = Snackbar.make(getView(), "查询天气信息失败", Snackbar.LENGTH_SHORT);
                         snackbar.getView().setBackgroundColor(Color.parseColor("#9b92b3"));
                         ((TextView) snackbar.getView().findViewById(R.id.snackbar_text))
@@ -293,8 +305,8 @@ public class WeatherViewFragment extends Fragment {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    if (isInit && !loadOk)
-                        mWeatherInfo = new WeatherInfo();
+//                    if (isInit && !loadOk)
+//                        mWeatherInfo = new WeatherInfo();
                     final Snackbar snackbar = Snackbar.make(getView(), "网络连接不可用", Snackbar.LENGTH_SHORT);
                     snackbar.getView().setBackgroundColor(Color.parseColor("#9b92b3"));
                     ((TextView) snackbar.getView().findViewById(R.id.snackbar_text))
@@ -319,12 +331,18 @@ public class WeatherViewFragment extends Fragment {
     }
 
     public void updateView() {
-        if(!mWeatherInfo.getmRain().contains("无") && mWeatherInfo.getmRain().contains("雨")) {
+        if((!mWeatherInfo.getmRain().contains("无") && mWeatherInfo.getmRain().contains("雨"))
+                | (mWeatherInfo.getmRain().contains("有") &&
+                (mWeatherInfo.getmRain().contains("雨") | mWeatherInfo.getmRain().contains("降水")))) {
             mSunView.setVisibility(View.INVISIBLE);
             mWeatherView.setWeather(Constants.weatherStatus.RAIN);
             mWeatherView.startAnimation();
             Log.d("weatherView", "setWeatherView");
             //mRain.setText("有雨");
+        } else if (mWeatherInfo.getmRain().contains("雪")) {
+            mSunView.setVisibility(View.INVISIBLE);
+            mWeatherView.setWeather(Constants.weatherStatus.SNOW);
+            mWeatherView.startAnimation();
         } else {
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH");
             int now = Integer.valueOf(simpleDateFormat.format(new Date()));
@@ -332,7 +350,9 @@ public class WeatherViewFragment extends Fragment {
                 mSunView.setImageResource(R.drawable.sun_cloud_icon);
             else
                 mSunView.setImageResource(R.drawable.full_moon_512);
-
+            if (mWeatherView.getCurrentWeather() == Constants.weatherStatus.RAIN
+                    || mWeatherView.getCurrentWeather() == Constants.weatherStatus.SNOW)
+                mWeatherView.cancelAnimation();
             mSunView.setVisibility(View.VISIBLE);
             mWeatherView.setWeather(Constants.weatherStatus.SUN);
             Log.d("weatherView", "setWeatherView");
@@ -340,9 +360,11 @@ public class WeatherViewFragment extends Fragment {
         }
 
         if (src == 2) {
-            tvHum.setText("风向");
-            tvLight.setText("风力");
+            tvPM.setText("PM2.5");
+            tvHum.setText("风力");
+            tvLight.setText("风向");
         } else {
+            tvPM.setText("细颗粒物");
             tvHum.setText("气压");
             tvLight.setText("照度");
         }
@@ -358,11 +380,14 @@ public class WeatherViewFragment extends Fragment {
         mHum.setText(String.valueOf(mWeatherInfo.getmHum()));
         mWet.setText(String.valueOf(mWeatherInfo.getmWet()));
         mPM.setText(String.valueOf(mWeatherInfo.getmPM()));
+        mSO.setText(String.valueOf(mWeatherInfo.getmSO()));
         mLight.setText(String.valueOf(mWeatherInfo.getmLight()));
 
         if ((isInit || isFresh) && loadOk) {
             if (isInit)
                 isInit = false;
+            if (isFresh)
+                isFresh = false;
             final Snackbar snackbar = Snackbar.make(getView(), "天气信息已获取", Snackbar.LENGTH_SHORT);
             snackbar.getView().setBackgroundColor(Color.parseColor("#9b92b3"));
             ((TextView) snackbar.getView().findViewById(R.id.snackbar_text))

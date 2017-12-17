@@ -38,7 +38,7 @@ public class WeatherInfoClient {
     private static String jsonString;
     public static String resString;
     public static boolean resCode = false;
-    public static WeatherInfo weatherInfo;
+    public static WeatherInfo weatherInfo = new WeatherInfo();
 
     // 获取是否下雨
     public static boolean isRain() {
@@ -46,12 +46,7 @@ public class WeatherInfoClient {
     }
 
     // 获取天气信息
-    public static void getWeathInfo(int i) {
-        if (i == 2) {
-            getPublicWeatherInfo();
-            return;
-        }
-        weatherInfo = new WeatherInfo();
+    public static void getWeathInfo() {
         RequestParams params = new RequestParams();
         AsyncHttpClient.getWeathInfo(params, new AsyncHttpResponseHandler() {
             @Override
@@ -79,11 +74,114 @@ public class WeatherInfoClient {
         });
     }
 
-    // 从公共接口获取天气信息
-    public static void getPublicWeatherInfo() {
-        weatherInfo = new WeatherInfo();
+    private static void parseWeathInfo(String htmlString) {
+        Document doc = Jsoup.parse(htmlString);
+
+        // 解析更新时间
+        Element refreshInfo = doc.select("body").last().child(0);
+        String refresh = refreshInfo.text();
+        weatherInfo.setmRefresh(refresh);
+
+        // 解析气象信息
+        Element weatherEle = doc.select("div").get(1);
+        weatherInfo.setmRain(weatherEle.text());
+
+        // 解析温度数据
+        Element tempInfo = doc.select("div").first();
+        String temp = tempInfo.text();
+        Log.d("weatherinfoclient", "temp " + temp);
+        weatherInfo.setmTemp(temp);
+
+        // 解析表格数据
+        Element weatherInfos = doc.select("table").first();
+        Elements lists = weatherInfos.getElementsByTag("tr");
+        int size = lists.size();
+        for (int i = 0; i < size; i++) {
+            Element item = lists.get(i);
+            Elements els = item.getElementsByTag("td");
+
+            String itemInfo = "";
+            for (int j = 0; j < els.size(); j++) {
+                Element value = els.get(j);
+                String text = value.text();
+                itemInfo = itemInfo + text + "#";
+            }
+            parseItem(itemInfo);
+            Log.d("weatheriteminfo", itemInfo);
+        }
+    }
+
+    public static void getLocalWeatherInfo(String baseUrl) {
+        resCode = false;
         RequestParams params = new RequestParams();
-        AsyncHttpClient.getPublicWeathInfo(params, new AsyncHttpResponseHandler() {
+        AsyncHttpClient.getLocalWeathInfo(baseUrl, params, new AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                try {
+                    jsonString = new String(responseBody, "UTF-8");
+                    parse(jsonString);
+                    Log.d("weatherinfoclient", jsonString);
+                    parseLocalWeathInfo(jsonString);
+                    resCode = true;
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                    resCode = false;
+                    resString = e.toString();
+                    Log.d("weatherinfoclient", "error:" + resString);
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                resCode = false;
+                resString = String.valueOf(statusCode);
+                Log.d("weatherinfoclient", "error:" + resString);
+            }
+        });
+    }
+
+    private static void parseLocalWeathInfo(String htmlString) {
+        Document doc = Jsoup.parse(htmlString);
+
+        // 解析更新时间
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date refreshDate = new Date();
+        weatherInfo.setmRefresh(simpleDateFormat.format(refreshDate));
+
+        // 解析气象信息
+        Element weatherEle = doc.select("div").get(1);
+        weatherInfo.setmRain(weatherEle.text());
+
+        // 解析温度数据
+        Element tempInfo = doc.select("div").first();
+        String temp = tempInfo.text();
+        Log.d("weatherinfoclient", "temp " + temp);
+        weatherInfo.setmTemp(temp);
+
+        // 解析表格数据
+        Element weatherInfos = doc.select("table").first();
+        Elements lists = weatherInfos.getElementsByTag("tr");
+        int size = lists.size();
+        for (int i = 0; i < size; i++) {
+            Element item = lists.get(i);
+            Elements els = item.getElementsByTag("td");
+
+            String itemInfo = "";
+            for (int j = 0; j < els.size(); j++) {
+                Element value = els.get(j);
+                String text = value.text();
+                itemInfo = itemInfo + text + "#";
+            }
+            parseItem(itemInfo);
+            Log.d("weatheriteminfo", itemInfo);
+        }
+    }
+
+    // 从公共接口获取天气信息
+    public static void getPublicWeatherInfo(String cityName) {
+        resCode = false;
+        RequestParams params = new RequestParams();
+        AsyncHttpClient.getPublicWeathInfo(cityName, params, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                 try {
@@ -110,15 +208,16 @@ public class WeatherInfoClient {
     }
 
     private static void parsePublicWeathInfo(String htmlString) throws UnsupportedEncodingException {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH");
         String refreshDate = simpleDateFormat.format(new Date());
-        int hour = Integer.valueOf(refreshDate.substring(5, 6));
+        int hour = Integer.valueOf(refreshDate.substring(11, 13));
         boolean isNight = false;
         if (hour >= 18)
             isNight = true;
         boolean isfirst = true;
         boolean issecond = false;
-
+        Log.d("alarm", "hour" + hour);
+        Log.d("alarm", "isnight" + isNight);
         XmlPullParser xmlPullParser = Xml.newPullParser();
         InputStream inputStream = new ByteArrayInputStream(htmlString.getBytes("UTF-8"));
         try {
@@ -131,7 +230,7 @@ public class WeatherInfoClient {
                         break;
                     case XmlPullParser.START_TAG:
                         if ("updatetime".equals(xmlPullParser.getName())) {
-                            weatherInfo.setmRefresh(refreshDate + " " + xmlPullParser.nextText());
+                            weatherInfo.setmRefresh(refreshDate.substring(0, 10) + " " + xmlPullParser.nextText());
                         } else if ("wendu".equals(xmlPullParser.getName())) {
                             weatherInfo.setmTemp(xmlPullParser.nextText() + "℃");
                         } else if ("shidu".equals(xmlPullParser.getName())) {
@@ -142,12 +241,15 @@ public class WeatherInfoClient {
                             weatherInfo.setmLight(xmlPullParser.nextText());
                         } else if ("pm25".equals(xmlPullParser.getName())) {
                             weatherInfo.setmPM(xmlPullParser.nextText());
+                        } else if ("so2".equals(xmlPullParser.getName())) {
+                            weatherInfo.setmSO(xmlPullParser.nextText());
                         } else if ("type".equals(xmlPullParser.getName())) {
                             if (isfirst || issecond) {
                                 if (!isNight && isfirst)
                                     weatherInfo.setmRain(xmlPullParser.nextText());
                                 if (isNight && issecond) {
                                     weatherInfo.setmRain(xmlPullParser.nextText());
+                                    Log.d("alarm", weatherInfo.getmRain());
                                     issecond = false;
                                 }
                                 if (isfirst)
@@ -262,7 +364,7 @@ public class WeatherInfoClient {
 
             //
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            Date refreshDate = new Date(mainJsonObject.getLong("dt"));
+            Date refreshDate = new Date(mainJsonObject.getLong("dt")*1000);
             weatherInfo.setmRefresh(simpleDateFormat.format(refreshDate));
 
             //
@@ -270,40 +372,6 @@ public class WeatherInfoClient {
             weatherInfo.setmPM(jsonObject.getString("speed"));
         } catch (JSONException e) {
             e.printStackTrace();
-        }
-    }
-
-    private static void parseWeathInfo(String htmlString) {
-        Document doc = Jsoup.parse(htmlString);
-
-        // 解析更新时间
-        Element refreshInfo = doc.select("body").last().child(0);
-        String refresh = refreshInfo.text();
-        weatherInfo.setmRefresh(refresh);
-
-
-        // 解析温度数据
-        Element tempInfo = doc.select("div").first();
-        String temp = tempInfo.text();
-        Log.d("weatherinfoclient", "temp " + temp);
-        weatherInfo.setmTemp(temp);
-
-        // 解析表格数据
-        Element weatherInfos = doc.select("table").first();
-        Elements lists = weatherInfos.getElementsByTag("tr");
-        int size = lists.size();
-        for (int i = 0; i < size; i++) {
-            Element item = lists.get(i);
-            Elements els = item.getElementsByTag("td");
-
-            String itemInfo = "";
-            for (int j = 0; j < els.size(); j++) {
-                Element value = els.get(j);
-                String text = value.text();
-                itemInfo = itemInfo + text + "#";
-            }
-            parseItem(itemInfo);
-            Log.d("weatheriteminfo", itemInfo);
         }
     }
 
@@ -316,7 +384,9 @@ public class WeatherInfoClient {
             weatherInfo.setmHum(items[2]);
         if (items[0].equals("光照度"))
             weatherInfo.setmLight(items[2]);
-        if (items[0].equals("PM2.5"))
+        if (items[0].equals("细颗粒物"))
             weatherInfo.setmPM(items[2]);
+        if (items[0].equals("二氧化硫"))
+            weatherInfo.setmSO(items[2]);
     }
 }

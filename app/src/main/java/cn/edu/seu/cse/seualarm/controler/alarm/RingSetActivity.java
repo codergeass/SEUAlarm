@@ -5,6 +5,8 @@ import android.content.res.AssetFileDescriptor;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.support.v4.view.ViewCompat;
+import android.support.v4.view.ViewPropertyAnimatorListener;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -66,7 +68,8 @@ public class RingSetActivity extends AppCompatActivity {
             toolbar.setNavigationOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    doneRing();
+//                    doneRing();
+                    onBackPressed();
                 }
             });
         }
@@ -106,8 +109,31 @@ public class RingSetActivity extends AppCompatActivity {
         tv_custom_ring.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent customRingSetIntent = new Intent(RingSetActivity.this, CustomRingSetActivity.class);
-                startActivityForResult(customRingSetIntent, Constants.ASK_CUSTOM_RING_SET);
+                ViewCompat.animate(view)
+                        .setDuration(200)
+                        .scaleX(0.9f)
+                        .scaleY(0.9f)
+                        .setInterpolator(new CycleInterpolator())
+                        .setListener(new ViewPropertyAnimatorListener() {
+                            @Override
+                            public void onAnimationStart(final View view) {
+
+                            }
+
+                            @Override
+                            public void onAnimationEnd(final View view) {
+                                stopTheSong();
+                                Intent customRingSetIntent = new Intent(RingSetActivity.this, CustomRingSetActivity.class);
+                                customRingSetIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                startActivityForResult(customRingSetIntent, Constants.ASK_CUSTOM_RING_SET);
+                            }
+                            @Override
+                            public void onAnimationCancel(final View view) {
+
+                            }
+                        })
+                        .withLayer()
+                        .start();
             }
         });
 
@@ -131,6 +157,17 @@ public class RingSetActivity extends AppCompatActivity {
 
         currentItem = 0;
         Log.d("alarm", "默认得到的id" + setRingId);
+    }
+
+    // 点击动画
+    private class CycleInterpolator implements android.view.animation.Interpolator {
+
+        private final float mCycles = 0.5f;
+
+        @Override
+        public float getInterpolation(final float input) {
+            return (float) Math.sin(2.0f * mCycles * Math.PI * input);
+        }
     }
 
     private void initAdapter() {
@@ -257,12 +294,13 @@ public class RingSetActivity extends AppCompatActivity {
         Log.d("alarm", "ring set done");
         Log.d("alarm", "setRingName:" + setRingName);
         Log.d("alarm", "setRingId:" + setRingId);
-        finish();
+//        finish();
     }
 
     @Override
     public void onBackPressed() {
         doneRing();
+        super.onBackPressed();
     }
 
     @Override

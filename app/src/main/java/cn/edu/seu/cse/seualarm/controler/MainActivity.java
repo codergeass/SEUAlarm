@@ -249,6 +249,7 @@ public class MainActivity extends AppCompatActivity {
         );
 
         mNtb.setModels(models);
+        mNtb.setBgColor(Color.parseColor("#644274"));
         mNtb.setViewPager(mViewPager, lastSelected);
 
         mNtb.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -291,7 +292,9 @@ public class MainActivity extends AppCompatActivity {
                             public void run() {
                                 if (weatherViewFragment != null)
                                     if (weatherViewFragment.mWeatherView.getCurrentWeather()
-                                    == xyz.matteobattilana.library.Common.Constants.weatherStatus.RAIN)
+                                    == xyz.matteobattilana.library.Common.Constants.weatherStatus.RAIN
+                                            || weatherViewFragment.mWeatherView.getCurrentWeather()
+                                            == xyz.matteobattilana.library.Common.Constants.weatherStatus.SNOW)
                                     weatherViewFragment.mWeatherView.cancelAnimation();
                             }
                         }, 500);

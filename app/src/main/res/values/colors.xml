@@ -120,7 +120,9 @@
         <item>#FD7044</item>
     </array>
 
-    <color name="bg_color">#423752</color>
+    <color name="bg_color">#2B335A</color>
+    <color name="bar_color">#644274</color>
+    <!--<color name="bg_color">#423752</color>-->
     <color name="light_black">#141414</color>
     <color name="black_33">#333333</color>
     <color name="line_and_outline_grey">#d9d9d9</color>

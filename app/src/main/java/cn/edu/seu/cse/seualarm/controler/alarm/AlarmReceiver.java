@@ -67,7 +67,14 @@ public class AlarmReceiver extends BroadcastReceiver {
         // 先获取天气信息
         if (alarmweather && NetworkUtil.isNetworkAvailable(context)) {
             Log.d("alarm", "get weatherinfo");
-            WeatherInfoClient.getWeathInfo(src);
+            if (src == 1)
+                WeatherInfoClient.getLocalWeatherInfo(
+                        PrefUtil.getString(context, Constants.IP_WEB, "223.3.173.237"));
+            else if (src == 2)
+                WeatherInfoClient.getPublicWeatherInfo(
+                        PrefUtil.getString(context, Constants.CITY_NAME, "南京"));
+            else
+                WeatherInfoClient.getWeathInfo();
             //sleep();
 
             new Handler().postDelayed(new Runnable() {
@@ -92,7 +99,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                         }
                     }
                 }
-            }, 1000);
+            }, 2000);
 //            new Thread(new Runnable() {
 //                @Override
 //                public void run() {

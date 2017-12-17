@@ -13,6 +13,7 @@ public class AsyncHttpClient {
     private static final String WEATHER_URL = "weather.html";
     private static final String PUBLIC_URL = "http://wthrcdn.etouch.cn/WeatherApi?";
     private static final String PUBLIC_END = "citykey=101190101";
+    private static final String CITY_END = "city=";
     private static final String APP_ID = "e7736456fc8ac5ba15881baeb2fbcc0a";
     private static final String OPEN_URL = "http://api.openweathermap.org/data/2.5/weather?";
     private static final String OPEN_END = "id=1799962&appid=" + APP_ID + "&units=metric";
@@ -32,8 +33,8 @@ public class AsyncHttpClient {
         get(WEATHER_URL, params, responseHandler);
     }
 
-    public static void getPublicWeathInfo(RequestParams params, AsyncHttpResponseHandler responseHandler) {
-        client.get(getPublicAbsoluteUrl(), params, responseHandler);
+    public static void getPublicWeathInfo(String cityName, RequestParams params, AsyncHttpResponseHandler responseHandler) {
+        client.get(getPublicAbsoluteUrl(cityName), params, responseHandler);
     }
 
     public static void getOpenWeathInfo(RequestParams params, AsyncHttpResponseHandler responseHandler) {
@@ -44,11 +45,19 @@ public class AsyncHttpClient {
         return OPEN_URL + OPEN_END;
     }
 
-    private static String getPublicAbsoluteUrl() {
-        return PUBLIC_URL + PUBLIC_END;
+//    private static String getPublicAbsoluteUrl() {
+//        return PUBLIC_URL + PUBLIC_END;
+//    }
+
+    private static String getPublicAbsoluteUrl(String cityName) {
+        return PUBLIC_URL + CITY_END + cityName;
     }
 
     private static String getAbsoluteUrl(String relativeUrl) {
         return BASE_URL + relativeUrl;
+    }
+
+    public static void getLocalWeathInfo(String baseUrl, RequestParams params, AsyncHttpResponseHandler asyncHttpResponseHandler) {
+        client.get("http://" + baseUrl + "/realtime.php", params, asyncHttpResponseHandler);
     }
 }

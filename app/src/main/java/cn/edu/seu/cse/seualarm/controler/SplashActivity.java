@@ -65,7 +65,14 @@ public class SplashActivity extends Activity {
     }
 
     private void iniView() {
-        WeatherInfoClient.getWeathInfo(src);
+        if (src == 1)
+            WeatherInfoClient.getLocalWeatherInfo(
+                    PrefUtil.getString(getApplicationContext(), Constants.IP_WEB, "223.3.173.237"));
+        else if (src == 2)
+            WeatherInfoClient.getPublicWeatherInfo(
+                    PrefUtil.getString(getApplicationContext(), Constants.CITY_NAME, "南京"));
+        else
+            WeatherInfoClient.getWeathInfo();
 
         seualarmName = (TextView) findViewById(R.id.seualarm_name);
         Typeface fontFace = Typeface.createFromAsset(getResources().getAssets(), "fonts/FELIXTI.TTF");

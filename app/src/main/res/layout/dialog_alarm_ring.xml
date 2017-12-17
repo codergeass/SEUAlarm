@@ -40,6 +40,15 @@
             android:id="@+id/ll_weather">
         </include>
 
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="200dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:visibility="gone"
+            android:id="@+id/clock_view"
+            android:src="@drawable/clock_515px"/>
+
         <Button
             android:id="@+id/alarm_ring_ok"
             android:layout_width="match_parent"

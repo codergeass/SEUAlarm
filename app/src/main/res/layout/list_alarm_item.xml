@@ -85,7 +85,12 @@
 
     </RelativeLayout>
 
-    <View style="@style/Divider.Horizontal"
-        android:layout_marginTop="@dimen/item_margin_between_elements"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:background="@color/bg_color"/>
+
+    <!--<View style="@style/Divider.Horizontal"-->
+        <!--android:layout_marginTop="@dimen/item_margin_between_elements"/>-->
 
 </LinearLayout>

@@ -10,15 +10,16 @@
         android:background="@color/bg_color"
         android:orientation="vertical">
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="25dp"
-            android:background="@color/bg_color"/>
+        <!--<TextView-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="25dp"-->
+            <!--android:background="@color/bg_color"/>-->
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/color_setting"
+            android:layout_marginTop="25dp"
+            android:background="@color/saffron"
             android:orientation="vertical">
             
             <LinearLayout
@@ -56,7 +57,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/rb_common_net"
-                    android:layout_marginLeft="10dp"
+                    android:layout_marginLeft="5dp"
                     android:text="公共网络" />
 
                 <Space
@@ -68,7 +69,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/rb_local_net"
-                    android:layout_marginRight="10dp"
                     android:text="局域网络" />
 
                 <Space
@@ -87,14 +87,47 @@
             
         </LinearLayout>
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="20dp"
-            android:background="@color/bg_color"/>
+        <!--<TextView-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="20dp"-->
+            <!--android:background="@color/bg_color"/>-->
+
+        <RelativeLayout
+            android:id="@+id/city_rl"
+            style="@style/item_style"
+            android:layout_marginTop="20dp"
+            android:background="@color/saffron">
+
+            <TextView
+                style="@style/item_text_style"
+                android:layout_centerVertical="true"
+                android:layout_alignParentLeft="true"
+                android:text="公共气象源城市设置"/>
+
+            <TextView
+                android:id="@+id/arrow_three"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/ic_keyboard_arrow_right_black_24dp"/>
+
+            <TextView
+                android:id="@+id/tv_city_value"
+                style="@style/item_text_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="5dp"
+                android:layout_toLeftOf="@id/arrow_three" />
+        </RelativeLayout>
+
 
         <RelativeLayout
             style="@style/item_style"
-            android:background="@color/color_setting">
+            android:layout_marginTop="20dp"
+            android:background="@color/saffron">
 
             <TextView
                 style="@style/item_text_style"
@@ -114,15 +147,16 @@
 
         </RelativeLayout>
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="20dp"
-            android:background="@color/bg_color"/>
+        <!--<TextView-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="20dp"-->
+            <!--android:background="@color/bg_color"/>-->
 
         <RelativeLayout
             android:id="@+id/run_rl"
             style="@style/item_style"
-            android:background="@color/color_setting">
+            android:layout_marginTop="20dp"
+            android:background="@color/saffron">
 
             <TextView
                 style="@style/item_text_style"
@@ -149,15 +183,16 @@
                 android:layout_toLeftOf="@id/arrow_two" />
         </RelativeLayout>
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="20dp"
-            android:background="@color/bg_color"/>
+        <!--<TextView-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="20dp"-->
+            <!--android:background="@color/bg_color"/>-->
 
         <RelativeLayout
             android:id="@+id/run_reset_rl"
             style="@style/item_style"
-            android:background="@color/color_setting">
+            android:layout_marginTop="20dp"
+            android:background="@color/saffron">
 
             <TextView
                 style="@style/item_text_style"
@@ -188,7 +223,7 @@
         <!--android:layout_height="wrap_content"-->
         <!--android:layout_alignParentBottom="true"-->
         <!--android:layout_marginBottom="80dp"-->
-        <!--android:text="CopyRight M3A-507"-->
+        <!--android:text="Copyright M3A-507"-->
         <!--android:textColor="@color/white_trans30"-->
         <!--android:layout_centerHorizontal="true"-->
         <!--android:id="@+id/tv_copyright"/>-->

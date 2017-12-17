@@ -21,6 +21,7 @@ public class WeatherInfo implements Serializable {
     private String mHum;
     private String mWet;
     private String mPM;
+    private String mSO;
     private String mLight;
     private String mRefresh;
 
@@ -32,17 +33,19 @@ public class WeatherInfo implements Serializable {
         this.mHum = "1034hPa";
         this.mWet = "60%RH";
         this.mPM = "200";
+        this.mSO = "100";
         this.mLight = "1000lx";
         this.mRefresh = YMDHM.format(new Date());
     }
 
-    public WeatherInfo(String mTemp, String mRain, String mHum, String mWet, String mPM, String mLight,
+    public WeatherInfo(String mTemp, String mRain, String mHum, String mWet, String mPM, String mSO, String mLight,
                        String mRefresh) {
         this.mTemp = mTemp;
         this.mRain = mRain;
         this.mHum = mHum;
         this.mWet = mWet;
         this.mPM = mPM;
+        this.mSO = mSO;
         this.mLight = mLight;
         this.mRefresh = mRefresh;
     }
@@ -93,6 +96,14 @@ public class WeatherInfo implements Serializable {
 
     public void setmPM(String mPM) {
         this.mPM = mPM;
+    }
+
+    public String getmSO() {
+        return mSO;
+    }
+
+    public void setmSO(String mSO) {
+        this.mSO = mSO;
     }
 
     public String getmLight() {
